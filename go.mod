@@ -1,3 +1,3 @@
-module github.com/Hentyphoon/SC2_Analyzer
+module github.com/Hentyphoon/bw-analyzer-cli
 
 go 1.24.0
