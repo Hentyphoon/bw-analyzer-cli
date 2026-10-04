@@ -1,0 +1,50 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    # Integration tests (from M3 on) run against this database when
+    # TEST_DATABASE_URL is set, and skip otherwise.
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: bwa
+          POSTGRES_PASSWORD: bwa
+          POSTGRES_DB: bwa_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U bwa -d bwa_test"
+          --health-interval 2s
+          --health-timeout 5s
+          --health-retries 15
+
+    env:
+      TEST_DATABASE_URL: postgres://bwa:bwa@localhost:5432/bwa_test?sslmode=disable
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+
+      - name: Build
+        run: make build
+
+      - name: Vet
+        run: make vet
+
+      - name: Lint
+        uses: golangci/golangci-lint-action@v8
+        with:
+          version: v2.14.0
+
+      - name: Test
+        run: make test
