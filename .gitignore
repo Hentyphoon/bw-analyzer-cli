@@ -5,3 +5,12 @@
 *.prof
 coverage.*
 .env
+
+# Owner-supplied replays stay local: they are large and not ours to publish.
+# Golden files derived from them carry player names, so they stay local too.
+# The screp sample is already public (Apache-2.0) and keeps the tests
+# meaningful in CI, so it stays tracked.
+testdata/replays/*.rep
+!testdata/replays/screp_shieldbattery_zvt.rep
+testdata/golden/*.json
+!testdata/golden/screp_shieldbattery_zvt.json
