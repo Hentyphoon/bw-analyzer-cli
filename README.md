@@ -5,7 +5,7 @@ extracts per-player metrics, stores them in PostgreSQL, and answers one
 question well: **what does this opponent open with against my race, and how
 often does it win?**
 
-Status: milestone M1 (parse) in progress. `bwa parse <file> [--json]` works;
+Status: milestone M1 (parse) done. `bwa parse <file> [--json]` works;
 the other commands are stubs until their milestones land.
 
 ## Development
