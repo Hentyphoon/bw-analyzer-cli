@@ -18,7 +18,7 @@ func TestRunDispatch(t *testing.T) {
 		{"help", []string{"help"}, exitOK, "Usage: bwa", ""},
 		{"dash h", []string{"-h"}, exitOK, "Usage: bwa", ""},
 		{"unknown", []string{"frobnicate"}, exitUsage, "", `unknown command "frobnicate"`},
-		{"known stub", []string{"parse", "x.rep"}, exitFatal, "", "bwa parse: not implemented yet"},
+		{"known stub", []string{"serve"}, exitFatal, "", "bwa serve: not implemented yet"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

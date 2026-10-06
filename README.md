@@ -5,11 +5,12 @@ extracts per-player metrics, stores them in PostgreSQL, and answers one
 question well: **what does this opponent open with against my race, and how
 often does it win?**
 
-Status: scaffold (milestone M0). Commands are stubs until their milestones land.
+Status: milestone M1 (parse) in progress. `bwa parse <file> [--json]` works;
+the other commands are stubs until their milestones land.
 
 ## Development
 
-Requires Go 1.24+, Docker (for Postgres), and `golangci-lint` v2.
+Requires Go 1.25+ (the minimum set by screp), Docker (for Postgres), and `golangci-lint` v2.
 
 ```sh
 make build        # bin/bwa

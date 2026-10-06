@@ -27,7 +27,7 @@ type command struct {
 }
 
 var commands = []command{
-	{"parse", "print one replay's summary and build orders", notImplemented("parse")},
+	{"parse", "print one replay's summary and build orders", runParse},
 	{"ingest", "concurrently ingest a directory of replays into Postgres", notImplemented("ingest")},
 	{"eval", "score the opening classifier against hand labels", notImplemented("eval")},
 	{"serve", "serve the REST API", notImplemented("serve")},

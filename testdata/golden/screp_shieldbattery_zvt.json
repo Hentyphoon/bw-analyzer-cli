@@ -1,0 +1,45 @@
+{
+  "file": "screp_shieldbattery_zvt.rep",
+  "hash": "dbaab7f409f933e4d6acb2f0df17db04b93507639b95f2aa6c67667e6a0765ac",
+  "map": "Eclipse 1.3",
+  "version": "1.21+",
+  "game_type": "Top vs Bottom",
+  "played_at": "2025-04-27T08:32:49Z",
+  "frames": 30979,
+  "duration_seconds": 1301.118,
+  "parse_errors": 0,
+  "players": [
+    {
+      "id": 0,
+      "name": "[z]home",
+      "race": "Z",
+      "team": 1,
+      "human": true,
+      "observer": false,
+      "result": "loss",
+      "start": {
+        "x": 3776,
+        "y": 272
+      },
+      "actions": 6964,
+      "effective_actions": 5567,
+      "production_cmds": 363
+    },
+    {
+      "id": 1,
+      "name": "IlIIlIlIlIIllII",
+      "race": "T",
+      "team": 2,
+      "human": true,
+      "observer": false,
+      "result": "win",
+      "start": {
+        "x": 320,
+        "y": 3248
+      },
+      "actions": 6987,
+      "effective_actions": 4850,
+      "production_cmds": 616
+    }
+  ]
+}
