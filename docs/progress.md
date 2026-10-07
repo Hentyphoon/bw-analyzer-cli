@@ -37,7 +37,6 @@ Status is one of: not started, in progress, awaiting review, done.
 Anything built differently from `PLAN.md`, with the reason. One line each, prefixed with the milestone.
 
 - M1: `go.mod` requires Go 1.25 instead of 1.24, because screp v1.13.4 requires it.
-- M1: the golden test lives in `cmd/bwa` (`TestParseGolden`) and compares `bwa parse --json` output, not in `internal/parser`. Regenerate with `go test ./cmd/bwa -run TestParseGolden -update`.
 - M1: owner replays and their golden files are git-ignored (size, and the golden files carry player names). Only screp's public ShieldBattery ZvT sample (Apache-2.0) is tracked, so CI tests run on that one file.
 - M0: the Makefile has a `RACE ?= -race` override (`make test RACE=`) for machines without cgo and a C compiler, such as this Windows box.
 
@@ -55,6 +54,4 @@ Anything unexpected found in real replays. These feed `docs/architecture.md` and
 
 Open questions that block or affect upcoming work. Remove each one when answered and record the answer in `docs/decisions.md`.
 
-- `PLAN.md` is referenced by `CLAUDE.md`, this file, and `testdata/replays/README.md`, but it isn't in the repo or the git history. Should it be committed? M2 onward needs sections 7, 8, and 14.
-- The git remote is `github.com/Hentyphoon/SC2_Analyzer`, but the module is `github.com/Hentyphoon/bw-analyzer-cli`. Should the GitHub repo be renamed to match?
 - A replay with a Random pick, and one with an observer in a `One on One` or `Top vs Bottom` game, would settle the two open findings in `docs/architecture.md`.
