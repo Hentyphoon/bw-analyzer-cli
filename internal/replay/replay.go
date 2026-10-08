@@ -5,6 +5,7 @@ package replay
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"errors"
 	"time"
 )
 
@@ -101,6 +102,14 @@ type ProductionCmd struct {
 	// Pos is set for KindBuild only.
 	Pos *Point
 }
+
+// MaxFileSize is the largest replay file accepted. Real 1v1 replays are a
+// few hundred kilobytes; the cap keeps a stray large file from being read
+// into memory.
+const MaxFileSize = 8 << 20
+
+// ErrTooLarge is returned for a file over MaxFileSize.
+var ErrTooLarge = errors.New("replay file too large")
 
 // ContentHash returns the sha256 hex digest used to identify a replay file.
 func ContentHash(data []byte) string {

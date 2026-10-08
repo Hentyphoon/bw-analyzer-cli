@@ -90,10 +90,18 @@ func TestParseBuildOrderMinutes(t *testing.T) {
 }
 
 func TestParseCommand(t *testing.T) {
-	garbage := filepath.Join(t.TempDir(), "garbage.rep")
-	if err := os.WriteFile(garbage, []byte("not a replay"), 0o644); err != nil {
-		t.Fatal(err)
+	dir := t.TempDir()
+	write := func(name string, size int) string {
+		t.Helper()
+		path := filepath.Join(dir, name)
+		if err := os.WriteFile(path, bytes.Repeat([]byte("x"), size), 0o644); err != nil {
+			t.Fatal(err)
+		}
+		return path
 	}
+	garbage := write("garbage.rep", 12)
+	atCap := write("at-cap.rep", replay.MaxFileSize)
+	overCap := write("over-cap.rep", replay.MaxFileSize+1)
 	tests := []struct {
 		name       string
 		args       []string
@@ -116,6 +124,10 @@ func TestParseCommand(t *testing.T) {
 		{"help", []string{"parse", "-h"}, exitOK, "", "Usage: bwa parse"},
 		{"missing file", []string{"parse", "does-not-exist.rep"}, exitFatal, "", "bwa parse:"},
 		{"garbage file", []string{"parse", garbage}, exitFatal, "", "invalid replay"},
+		// At the cap the file is read and then rejected by the parser;
+		// one byte over, it is refused before parsing.
+		{"file at the size cap", []string{"parse", atCap}, exitFatal, "", "invalid replay"},
+		{"file over the size cap", []string{"parse", overCap}, exitFatal, "", "replay file too large (over 8 MB)"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

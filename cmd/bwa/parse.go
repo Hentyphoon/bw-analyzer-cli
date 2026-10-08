@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"flag"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -80,7 +81,7 @@ func runParse(args []string, stdout, stderr io.Writer) int {
 		return exitUsage
 	}
 
-	data, err := os.ReadFile(files[0])
+	data, err := readReplayFile(files[0])
 	if err != nil {
 		printf(stderr, "bwa parse: %v\n", err)
 		return exitFatal
@@ -212,6 +213,26 @@ func printText(w io.Writer, out parseOutput) {
 			printf(w, "%7s  %s\n", s.Time, s.Name)
 		}
 	}
+}
+
+// readReplayFile reads a replay file, refusing anything over
+// replay.MaxFileSize. It reads at most one byte past the cap, so an
+// oversized file is never loaded in full.
+func readReplayFile(path string) ([]byte, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer func() { _ = f.Close() }() // read-only: a close error loses nothing
+
+	data, err := io.ReadAll(io.LimitReader(f, replay.MaxFileSize+1))
+	if err != nil {
+		return nil, fmt.Errorf("reading %s: %w", path, err)
+	}
+	if len(data) > replay.MaxFileSize {
+		return nil, fmt.Errorf("%s: %w (over %d MB)", path, replay.ErrTooLarge, replay.MaxFileSize>>20)
+	}
+	return data, nil
 }
 
 // parseInterspersed parses fs from args, allowing flags after positional
