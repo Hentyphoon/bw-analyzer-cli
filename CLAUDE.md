@@ -10,6 +10,7 @@ Go CLI (`bwa`) and HTTP service that ingests StarCraft: Brood War replays into P
 - `docs/goals.md` says why the project exists and which claims it has to back with evidence. Read it once at the start, and again before benchmark, evaluation, or documentation work.
 - `docs/decisions.md` records why the plan is the way it is. Read it before changing an approach, and append to it when you make a new decision.
 - If this file and `PLAN.md` disagree, follow `PLAN.md` and tell the owner.
+- This file was written from `PLAN.md` before the code existed. A line that doesn't match the current code (a command, a path, a flag) may describe a later step. Leave it as written; don't "fix" it to match today's state. The exception is a rule the owner has since changed in conversation, which is recorded in `docs/decisions.md`.
 
 ## Workflow
 
@@ -59,4 +60,4 @@ Integration tests skip silently unless `TEST_DATABASE_URL` is set. Run `make db-
 - A build order is a list of commands the player issued, not of things that finished. Name and document it that way.
 - A player's identity is their name, compared case-insensitively. Replays carry no account ID.
 - Assume replays are valid Brood War replay files (owner decision, M2). Enforce the 8 MB size cap (`replay.MaxFileSize`) and pass on the errors the library returns, but don't add defensive code for corrupt or adversarial data, such as implausible header values. Keep the parser's existing `recover()` and M3's per-replay failure isolation, which the plan requires.
-- Commit only the small samples in `testdata/replays/`. The benchmark corpus stays out of git.
+- Never commit replay files. The owner's samples in `testdata/replays/`, their golden files in `testdata/golden/`, and the benchmark corpus are git-ignored and stay local. The only exception is screp's public sample, `screp_shieldbattery_zvt.rep`, and its golden file, which are already tracked so CI has a real replay.
