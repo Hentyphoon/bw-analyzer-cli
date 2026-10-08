@@ -7,6 +7,7 @@
   "played_at": "2025-04-27T08:32:49Z",
   "frames": 30979,
   "duration_seconds": 1301.118,
+  "matchup": "TvZ",
   "parse_errors": 0,
   "players": [
     {
@@ -23,7 +24,355 @@
       },
       "actions": 6964,
       "effective_actions": 5567,
-      "production_cmds": 363
+      "production_cmds": 363,
+      "analysis": {
+        "opponent_race": "T",
+        "apm": 321.71036827614245,
+        "eapm": 257.17427056193065,
+        "redundancy": 0.20060310166570935,
+        "minutes": [
+          {
+            "minute": 0,
+            "actions": 568,
+            "effective_actions": 247
+          },
+          {
+            "minute": 1,
+            "actions": 566,
+            "effective_actions": 150
+          },
+          {
+            "minute": 2,
+            "actions": 352,
+            "effective_actions": 299
+          },
+          {
+            "minute": 3,
+            "actions": 343,
+            "effective_actions": 270
+          },
+          {
+            "minute": 4,
+            "actions": 243,
+            "effective_actions": 211
+          },
+          {
+            "minute": 5,
+            "actions": 191,
+            "effective_actions": 165
+          },
+          {
+            "minute": 6,
+            "actions": 351,
+            "effective_actions": 336
+          },
+          {
+            "minute": 7,
+            "actions": 352,
+            "effective_actions": 318
+          },
+          {
+            "minute": 8,
+            "actions": 399,
+            "effective_actions": 382
+          },
+          {
+            "minute": 9,
+            "actions": 347,
+            "effective_actions": 334
+          },
+          {
+            "minute": 10,
+            "actions": 341,
+            "effective_actions": 317
+          },
+          {
+            "minute": 11,
+            "actions": 262,
+            "effective_actions": 228
+          },
+          {
+            "minute": 12,
+            "actions": 270,
+            "effective_actions": 234
+          },
+          {
+            "minute": 13,
+            "actions": 282,
+            "effective_actions": 244
+          },
+          {
+            "minute": 14,
+            "actions": 266,
+            "effective_actions": 245
+          },
+          {
+            "minute": 15,
+            "actions": 264,
+            "effective_actions": 237
+          },
+          {
+            "minute": 16,
+            "actions": 374,
+            "effective_actions": 293
+          },
+          {
+            "minute": 17,
+            "actions": 275,
+            "effective_actions": 252
+          },
+          {
+            "minute": 18,
+            "actions": 252,
+            "effective_actions": 215
+          },
+          {
+            "minute": 19,
+            "actions": 256,
+            "effective_actions": 229
+          },
+          {
+            "minute": 20,
+            "actions": 290,
+            "effective_actions": 258
+          },
+          {
+            "minute": 21,
+            "actions": 120,
+            "effective_actions": 103
+          }
+        ],
+        "build_order": [
+          {
+            "time": "0:01",
+            "frame": 30,
+            "kind": "unit",
+            "name": "Drone"
+          },
+          {
+            "time": "0:14",
+            "frame": 353,
+            "kind": "unit",
+            "name": "Drone"
+          },
+          {
+            "time": "0:24",
+            "frame": 582,
+            "kind": "unit",
+            "name": "Drone"
+          },
+          {
+            "time": "0:33",
+            "frame": 800,
+            "kind": "unit",
+            "name": "Drone"
+          },
+          {
+            "time": "0:41",
+            "frame": 999,
+            "kind": "unit",
+            "name": "Drone"
+          },
+          {
+            "time": "0:52",
+            "frame": 1252,
+            "kind": "unit",
+            "name": "Overlord"
+          },
+          {
+            "time": "1:22",
+            "frame": 1960,
+            "kind": "unit",
+            "name": "Drone"
+          },
+          {
+            "time": "1:27",
+            "frame": 2080,
+            "kind": "unit",
+            "name": "Drone"
+          },
+          {
+            "time": "1:38",
+            "frame": 2345,
+            "kind": "structure",
+            "name": "Hatchery"
+          },
+          {
+            "time": "1:55",
+            "frame": 2759,
+            "kind": "structure",
+            "name": "Spawning Pool"
+          },
+          {
+            "time": "2:01",
+            "frame": 2901,
+            "kind": "structure",
+            "name": "Extractor"
+          },
+          {
+            "time": "2:06",
+            "frame": 3021,
+            "kind": "unit",
+            "name": "Drone"
+          },
+          {
+            "time": "2:13",
+            "frame": 3172,
+            "kind": "unit",
+            "name": "Drone"
+          },
+          {
+            "time": "2:22",
+            "frame": 3388,
+            "kind": "unit",
+            "name": "Drone"
+          },
+          {
+            "time": "2:28",
+            "frame": 3539,
+            "kind": "unit",
+            "name": "Drone"
+          },
+          {
+            "time": "2:40",
+            "frame": 3819,
+            "kind": "unit",
+            "name": "Drone"
+          },
+          {
+            "time": "2:54",
+            "frame": 4155,
+            "kind": "structure",
+            "name": "Lair"
+          },
+          {
+            "time": "2:55",
+            "frame": 4174,
+            "kind": "unit",
+            "name": "Zergling"
+          },
+          {
+            "time": "2:57",
+            "frame": 4236,
+            "kind": "unit",
+            "name": "Drone"
+          },
+          {
+            "time": "3:07",
+            "frame": 4467,
+            "kind": "unit",
+            "name": "Overlord"
+          },
+          {
+            "time": "3:11",
+            "frame": 4557,
+            "kind": "unit",
+            "name": "Drone"
+          },
+          {
+            "time": "3:19",
+            "frame": 4746,
+            "kind": "research",
+            "name": "Metabolic Boost (Zergling Speed)"
+          },
+          {
+            "time": "3:25",
+            "frame": 4887,
+            "kind": "unit",
+            "name": "Drone"
+          },
+          {
+            "time": "3:35",
+            "frame": 5125,
+            "kind": "unit",
+            "name": "Drone"
+          },
+          {
+            "time": "3:36",
+            "frame": 5151,
+            "kind": "unit",
+            "name": "Drone"
+          },
+          {
+            "time": "3:42",
+            "frame": 5297,
+            "kind": "unit",
+            "name": "Drone"
+          },
+          {
+            "time": "3:54",
+            "frame": 5586,
+            "kind": "unit",
+            "name": "Drone"
+          },
+          {
+            "time": "3:55",
+            "frame": 5599,
+            "kind": "unit",
+            "name": "Drone"
+          },
+          {
+            "time": "3:58",
+            "frame": 5676,
+            "kind": "structure",
+            "name": "Spire"
+          },
+          {
+            "time": "3:58",
+            "frame": 5690,
+            "kind": "structure",
+            "name": "Extractor"
+          },
+          {
+            "time": "4:02",
+            "frame": 5780,
+            "kind": "unit",
+            "name": "Drone"
+          },
+          {
+            "time": "4:08",
+            "frame": 5911,
+            "kind": "unit",
+            "name": "Drone"
+          },
+          {
+            "time": "4:19",
+            "frame": 6176,
+            "kind": "unit",
+            "name": "Zergling"
+          },
+          {
+            "time": "4:22",
+            "frame": 6257,
+            "kind": "unit",
+            "name": "Zergling"
+          },
+          {
+            "time": "4:27",
+            "frame": 6369,
+            "kind": "structure",
+            "name": "Hatchery"
+          },
+          {
+            "time": "4:32",
+            "frame": 6482,
+            "kind": "unit",
+            "name": "Drone"
+          },
+          {
+            "time": "4:39",
+            "frame": 6659,
+            "kind": "unit",
+            "name": "Overlord"
+          },
+          {
+            "time": "4:40",
+            "frame": 6685,
+            "kind": "unit",
+            "name": "Overlord"
+          }
+        ]
+      }
     },
     {
       "id": 1,
@@ -39,7 +388,692 @@
       },
       "actions": 6987,
       "effective_actions": 4850,
-      "production_cmds": 616
+      "production_cmds": 616,
+      "analysis": {
+        "opponent_race": "Z",
+        "apm": 322.34550529399553,
+        "eapm": 223.75493068210653,
+        "redundancy": 0.30585372835265495,
+        "minutes": [
+          {
+            "minute": 0,
+            "actions": 582,
+            "effective_actions": 142
+          },
+          {
+            "minute": 1,
+            "actions": 385,
+            "effective_actions": 137
+          },
+          {
+            "minute": 2,
+            "actions": 343,
+            "effective_actions": 212
+          },
+          {
+            "minute": 3,
+            "actions": 329,
+            "effective_actions": 185
+          },
+          {
+            "minute": 4,
+            "actions": 240,
+            "effective_actions": 108
+          },
+          {
+            "minute": 5,
+            "actions": 261,
+            "effective_actions": 131
+          },
+          {
+            "minute": 6,
+            "actions": 319,
+            "effective_actions": 264
+          },
+          {
+            "minute": 7,
+            "actions": 344,
+            "effective_actions": 267
+          },
+          {
+            "minute": 8,
+            "actions": 283,
+            "effective_actions": 229
+          },
+          {
+            "minute": 9,
+            "actions": 376,
+            "effective_actions": 299
+          },
+          {
+            "minute": 10,
+            "actions": 368,
+            "effective_actions": 320
+          },
+          {
+            "minute": 11,
+            "actions": 302,
+            "effective_actions": 245
+          },
+          {
+            "minute": 12,
+            "actions": 331,
+            "effective_actions": 254
+          },
+          {
+            "minute": 13,
+            "actions": 266,
+            "effective_actions": 216
+          },
+          {
+            "minute": 14,
+            "actions": 282,
+            "effective_actions": 220
+          },
+          {
+            "minute": 15,
+            "actions": 322,
+            "effective_actions": 249
+          },
+          {
+            "minute": 16,
+            "actions": 296,
+            "effective_actions": 247
+          },
+          {
+            "minute": 17,
+            "actions": 290,
+            "effective_actions": 258
+          },
+          {
+            "minute": 18,
+            "actions": 274,
+            "effective_actions": 231
+          },
+          {
+            "minute": 19,
+            "actions": 334,
+            "effective_actions": 269
+          },
+          {
+            "minute": 20,
+            "actions": 273,
+            "effective_actions": 213
+          },
+          {
+            "minute": 21,
+            "actions": 187,
+            "effective_actions": 154
+          }
+        ],
+        "build_order": [
+          {
+            "time": "0:00",
+            "frame": 5,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "0:15",
+            "frame": 370,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "0:15",
+            "frame": 372,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "0:15",
+            "frame": 375,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "0:22",
+            "frame": 544,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "0:22",
+            "frame": 547,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "0:31",
+            "frame": 743,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "0:32",
+            "frame": 765,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "0:32",
+            "frame": 769,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "0:32",
+            "frame": 773,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "0:32",
+            "frame": 776,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "0:32",
+            "frame": 779,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "0:37",
+            "frame": 892,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "0:38",
+            "frame": 908,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "0:38",
+            "frame": 910,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "0:39",
+            "frame": 934,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "0:39",
+            "frame": 936,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "0:53",
+            "frame": 1285,
+            "kind": "structure",
+            "name": "Supply Depot"
+          },
+          {
+            "time": "1:00",
+            "frame": 1430,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "1:00",
+            "frame": 1432,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "1:08",
+            "frame": 1632,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "1:08",
+            "frame": 1635,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "1:24",
+            "frame": 2017,
+            "kind": "structure",
+            "name": "Barracks"
+          },
+          {
+            "time": "1:28",
+            "frame": 2100,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "1:30",
+            "frame": 2145,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "1:30",
+            "frame": 2147,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "1:30",
+            "frame": 2151,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "1:30",
+            "frame": 2154,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "1:30",
+            "frame": 2157,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "1:42",
+            "frame": 2442,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "1:47",
+            "frame": 2552,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "1:47",
+            "frame": 2555,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "2:16",
+            "frame": 3244,
+            "kind": "unit",
+            "name": "Marine"
+          },
+          {
+            "time": "2:16",
+            "frame": 3256,
+            "kind": "structure",
+            "name": "Supply Depot"
+          },
+          {
+            "time": "2:33",
+            "frame": 3643,
+            "kind": "structure",
+            "name": "Command Center"
+          },
+          {
+            "time": "2:39",
+            "frame": 3798,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "2:39",
+            "frame": 3801,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "2:46",
+            "frame": 3976,
+            "kind": "structure",
+            "name": "Refinery"
+          },
+          {
+            "time": "2:50",
+            "frame": 4062,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "3:05",
+            "frame": 4405,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "3:06",
+            "frame": 4441,
+            "kind": "structure",
+            "name": "Engineering Bay"
+          },
+          {
+            "time": "3:08",
+            "frame": 4492,
+            "kind": "unit",
+            "name": "Marine"
+          },
+          {
+            "time": "3:16",
+            "frame": 4686,
+            "kind": "unit",
+            "name": "Marine"
+          },
+          {
+            "time": "3:17",
+            "frame": 4694,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "3:17",
+            "frame": 4697,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "3:17",
+            "frame": 4701,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "3:17",
+            "frame": 4705,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "3:18",
+            "frame": 4716,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "3:18",
+            "frame": 4719,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "3:18",
+            "frame": 4721,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "3:29",
+            "frame": 4991,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "3:35",
+            "frame": 5121,
+            "kind": "structure",
+            "name": "Academy"
+          },
+          {
+            "time": "3:38",
+            "frame": 5200,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "3:38",
+            "frame": 5202,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "3:38",
+            "frame": 5206,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "3:38",
+            "frame": 5208,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "3:38",
+            "frame": 5211,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "3:48",
+            "frame": 5443,
+            "kind": "unit",
+            "name": "Marine"
+          },
+          {
+            "time": "3:51",
+            "frame": 5504,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "3:52",
+            "frame": 5528,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "3:52",
+            "frame": 5531,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "3:52",
+            "frame": 5535,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "3:52",
+            "frame": 5538,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "3:52",
+            "frame": 5542,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "3:53",
+            "frame": 5565,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "3:53",
+            "frame": 5569,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "3:54",
+            "frame": 5572,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "3:54",
+            "frame": 5580,
+            "kind": "research",
+            "name": "Terran Infantry Weapons"
+          },
+          {
+            "time": "4:01",
+            "frame": 5750,
+            "kind": "unit",
+            "name": "Marine"
+          },
+          {
+            "time": "4:01",
+            "frame": 5751,
+            "kind": "unit",
+            "name": "Marine"
+          },
+          {
+            "time": "4:02",
+            "frame": 5781,
+            "kind": "unit",
+            "name": "Marine"
+          },
+          {
+            "time": "4:02",
+            "frame": 5784,
+            "kind": "unit",
+            "name": "Marine"
+          },
+          {
+            "time": "4:03",
+            "frame": 5787,
+            "kind": "unit",
+            "name": "Marine"
+          },
+          {
+            "time": "4:03",
+            "frame": 5790,
+            "kind": "unit",
+            "name": "Marine"
+          },
+          {
+            "time": "4:04",
+            "frame": 5813,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "4:05",
+            "frame": 5836,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "4:05",
+            "frame": 5839,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "4:05",
+            "frame": 5842,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "4:05",
+            "frame": 5845,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "4:05",
+            "frame": 5848,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "4:06",
+            "frame": 5866,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "4:06",
+            "frame": 5870,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "4:06",
+            "frame": 5874,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "4:06",
+            "frame": 5876,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "4:08",
+            "frame": 5908,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "4:22",
+            "frame": 6245,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "4:24",
+            "frame": 6300,
+            "kind": "structure",
+            "name": "Supply Depot"
+          },
+          {
+            "time": "4:25",
+            "frame": 6320,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "4:27",
+            "frame": 6380,
+            "kind": "research",
+            "name": "Stim Packs"
+          },
+          {
+            "time": "4:29",
+            "frame": 6417,
+            "kind": "unit",
+            "name": "Medic"
+          },
+          {
+            "time": "4:34",
+            "frame": 6524,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "4:34",
+            "frame": 6532,
+            "kind": "unit",
+            "name": "SCV"
+          },
+          {
+            "time": "4:45",
+            "frame": 6804,
+            "kind": "structure",
+            "name": "Barracks"
+          },
+          {
+            "time": "4:48",
+            "frame": 6860,
+            "kind": "structure",
+            "name": "Barracks"
+          }
+        ]
+      }
     }
-  ]
+  ],
+  "build_order_minutes": 5
 }

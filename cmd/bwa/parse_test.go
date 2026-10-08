@@ -2,11 +2,15 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"flag"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
+
+	"github.com/Hentyphoon/bw-analyzer-cli/internal/replay"
 )
 
 var update = flag.Bool("update", false, "rewrite testdata/golden from current output")
@@ -52,6 +56,39 @@ func TestParseGolden(t *testing.T) {
 	}
 }
 
+func TestParseBuildOrderMinutes(t *testing.T) {
+	steps := func(minutes string) []stepOutput {
+		t.Helper()
+		var stdout, stderr bytes.Buffer
+		if code := run([]string{"parse", sample, "--json", "--minutes", minutes}, &stdout, &stderr); code != exitOK {
+			t.Fatalf("exit code %d, stderr: %s", code, stderr.String())
+		}
+		var out parseOutput
+		if err := json.Unmarshal(stdout.Bytes(), &out); err != nil {
+			t.Fatal(err)
+		}
+		var all []stepOutput
+		for _, p := range out.Players {
+			if p.Analysis == nil {
+				t.Fatalf("player %s has no analysis", p.Name)
+			}
+			all = append(all, p.Analysis.BuildOrder...)
+		}
+		return all
+	}
+
+	five, whole := steps("5"), steps("0")
+	cutoff := replay.FrameAt(5 * time.Minute)
+	for _, s := range five {
+		if s.Frame >= cutoff {
+			t.Errorf("step %s %s is past the 5 minute cutoff", s.Time, s.Name)
+		}
+	}
+	if len(whole) <= len(five) {
+		t.Errorf("whole game has %d steps, first 5 minutes %d", len(whole), len(five))
+	}
+}
+
 func TestParseCommand(t *testing.T) {
 	garbage := filepath.Join(t.TempDir(), "garbage.rep")
 	if err := os.WriteFile(garbage, []byte("not a replay"), 0o644); err != nil {
@@ -65,7 +102,12 @@ func TestParseCommand(t *testing.T) {
 		wantStderr string
 	}{
 		{"text", []string{"parse", sample}, exitOK, "Map:       Eclipse 1.3", ""},
-		{"text players", []string{"parse", sample}, exitOK, "   2  T     win      IlIIlIlIlIIllII", ""},
+		{"text players", []string{"parse", sample}, exitOK, "   2  T     win       322   224         31%  IlIIlIlIlIIllII", ""},
+		{"text matchup", []string{"parse", sample}, exitOK, "Matchup:   TvZ", ""},
+		{"text build order", []string{"parse", sample}, exitOK, "   1:55  Spawning Pool\n", ""},
+		{"build order cut at 5 minutes", []string{"parse", sample}, exitOK, "   4:48  Barracks\n", ""},
+		{"whole build order", []string{"parse", sample, "--minutes", "0"}, exitOK, "Build order: [z]home (Z)\n", ""},
+		{"negative minutes", []string{"parse", sample, "--minutes", "-1"}, exitUsage, "", "Usage: bwa parse"},
 		{"json after file", []string{"parse", sample, "--json"}, exitOK, `"map": "Eclipse 1.3"`, ""},
 		{"json before file", []string{"parse", "-json", sample}, exitOK, `"map": "Eclipse 1.3"`, ""},
 		{"no file", []string{"parse"}, exitUsage, "", "Usage: bwa parse"},

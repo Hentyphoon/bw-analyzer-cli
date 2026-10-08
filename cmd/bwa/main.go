@@ -79,3 +79,8 @@ func notImplemented(name string) func([]string, io.Writer, io.Writer) int {
 func printf(w io.Writer, format string, args ...any) {
 	_, _ = fmt.Fprintf(w, format, args...)
 }
+
+// sprintf is fmt.Sprintf, named alongside printf for symmetry.
+func sprintf(format string, args ...any) string {
+	return fmt.Sprintf(format, args...)
+}
