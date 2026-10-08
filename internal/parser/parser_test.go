@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/icza/screp/rep"
 	"github.com/icza/screp/rep/repcmd"
 	"github.com/icza/screp/rep/repcore"
 	"github.com/icza/screp/repparser"
@@ -227,5 +228,73 @@ func TestRandomRaceRecordedAsPlayed(t *testing.T) {
 	}
 	if reason := r.SkipReason(); reason != "" {
 		t.Errorf("SkipReason = %q, want the game kept", reason)
+	}
+}
+
+func TestMarkNonBuildersAsObservers(t *testing.T) {
+	human := func(id byte, team int) replay.Player {
+		return replay.Player{ID: id, Race: replay.Terran, Team: team, Human: true, Result: replay.Win}
+	}
+	builds := func(ids ...byte) []repcmd.Cmd {
+		var cmds []repcmd.Cmd
+		for _, id := range ids {
+			cmds = append(cmds, &repcmd.BuildCmd{Base: &repcmd.Base{PlayerID: id, Type: repcmd.TypeBuild}, Unit: repcmd.UnitByID(repcmd.UnitIDSupplyDepot)})
+		}
+		return cmds
+	}
+	cpu := replay.Player{ID: 255, Race: replay.Zerg, Team: 2}
+	tests := []struct {
+		name    string
+		players []replay.Player
+		cmds    []repcmd.Cmd
+		wantObs []bool
+	}{
+		{"1v1, both build", []replay.Player{human(0, 1), human(1, 2)}, builds(0, 1), []bool{false, false}},
+		{"1v1 plus an idle human", []replay.Player{human(0, 1), human(1, 2), human(2, 3)}, builds(0, 1), []bool{false, false, true}},
+		{"would leave one player", []replay.Player{human(0, 1), human(1, 2)}, builds(0), []bool{false, false}},
+		{"nobody builds", []replay.Player{human(0, 1), human(1, 2), human(2, 3)}, nil, []bool{false, false, false}},
+		{"computer left alone", []replay.Player{human(0, 1), cpu}, builds(0), []bool{false, false}},
+		{"2v2 with one idle player", []replay.Player{human(0, 1), human(1, 1), human(2, 2), human(3, 2)}, builds(0, 1, 3), []bool{false, false, true, false}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			markNonBuildersAsObservers(tt.players, tt.cmds)
+			for i, p := range tt.players {
+				if p.Observer != tt.wantObs[i] {
+					t.Errorf("player %d observer = %v, want %v", i, p.Observer, tt.wantObs[i])
+				}
+				if p.Observer && p.Result != replay.ResultUnknown {
+					t.Errorf("observer %d result = %q, want %q", i, p.Result, replay.ResultUnknown)
+				}
+			}
+		})
+	}
+}
+
+// TestObserverInTopVsBottomGame adds an idle human to the screp sample, a
+// ShieldBattery "Top vs Bottom" game where screp does not look for
+// observers, and checks the game is still kept as a 1v1.
+func TestObserverInTopVsBottomGame(t *testing.T) {
+	sr, err := repparser.ParseConfig(readSample(t), screpConfig())
+	if err != nil {
+		t.Fatal(err)
+	}
+	sr.Compute()
+	if got := sr.Header.Type.Name; got != "Top vs Bottom" {
+		t.Fatalf("sample game type = %q, want Top vs Bottom", got)
+	}
+	obs := &rep.Player{SlotID: 2, ID: 2, Type: repcore.PlayerTypeHuman, Race: repcore.RaceProtoss, Team: 3, Name: "watcher"}
+	sr.Header.Players = append(sr.Header.Players, obs)
+	sr.Header.PIDPlayers[obs.ID] = obs
+	sr.Computed.PlayerDescs = append(sr.Computed.PlayerDescs, &rep.PlayerDesc{PlayerID: obs.ID})
+
+	r := convert(sr)
+	if reason := r.SkipReason(); reason != "" {
+		t.Errorf("SkipReason = %q, want the game kept", reason)
+	}
+	for _, p := range r.Players {
+		if p.ID == obs.ID && !p.Observer {
+			t.Errorf("idle player not marked as observer: %+v", p)
+		}
 	}
 }

@@ -107,6 +107,9 @@ func convert(sr *rep.Replay) *replay.Replay {
 		r.Players = append(r.Players, rp)
 		pids[p.ID] = true
 	}
+	if sr.Commands != nil {
+		markNonBuildersAsObservers(r.Players, sr.Commands.Cmds)
+	}
 
 	if sr.Commands != nil {
 		r.ParseErrors = len(sr.Commands.ParseErrCmds)
@@ -213,6 +216,41 @@ func raceFromBuilds(cmds []repcmd.Cmd, playerID byte) replay.Race {
 		}
 	}
 	return replay.RaceUnknown
+}
+
+// markNonBuildersAsObservers marks as observers the human players who never
+// ordered a structure. screp only detects observers in Melee and UMS games,
+// so an observer in a One on One or Top vs Bottom game would otherwise
+// count as a third player and the 1v1 filter would skip the game. Observers
+// control no units and cannot order structures, while every real player
+// orders one in the opening (at least 15 in each sample game).
+//
+// Computers are left alone: they issue no recorded commands at all. As in
+// screp, nothing changes if fewer than two players would remain.
+func markNonBuildersAsObservers(players []replay.Player, cmds []repcmd.Cmd) {
+	builds := map[byte]int{}
+	for _, cmd := range cmds {
+		if b, ok := cmd.(*repcmd.BuildCmd); ok {
+			builds[b.PlayerID]++
+		}
+	}
+	var playing, idle []int // indexes into players
+	for i, p := range players {
+		if p.Observer {
+			continue
+		}
+		playing = append(playing, i)
+		if p.Human && builds[p.ID] == 0 {
+			idle = append(idle, i)
+		}
+	}
+	if len(playing)-len(idle) < 2 {
+		return
+	}
+	for _, i := range idle {
+		players[i].Observer = true
+		players[i].Result = replay.ResultUnknown // observers never win or lose
+	}
 }
 
 // result maps the library's winning team onto one player. WinnerTeam 0 means
