@@ -25,7 +25,7 @@ Status is one of: not started, in progress, awaiting review, done.
 |---|---|---|
 | M0 Scaffold | done | `4191db8`. Module layout, flag-based subcommand dispatch with stubs, Makefile, Postgres 16 compose, GitHub Actions CI (build, vet, golangci-lint, `go test -race`). Module renamed in `5df7203`. |
 | M1 Parse | done | `16a4a04`, `345eb0c`. Domain types, frame helpers, content hash, 1v1 filter, screp adapter, `bwa parse <file> [--json]`, golden test. Findings for all nine unconfirmed library items are in `docs/architecture.md`. Two remain open with safe fallbacks (Random race, and observers in non-melee games). |
-| M2 Analyze | awaiting review | `271d27a`, `4caa697`, `485eb7b`, plus docs and the worker queue model. APM, EAPM, redundancy, per-minute curves, de-noised build orders with per-race allowlists, worker estimate, matchup, and `Analyze` for one replay. `bwa parse` prints APM, EAPM, redundancy, and build orders (`--minutes`, default 5). Tests cover the section 12 edge cases; computed APM, EAPM, and redundancy agree with screp on all 11 samples. |
+| M2 Analyze | awaiting review | `271d27a`, `4caa697`, `485eb7b`, plus docs, the worker queue model, and the 8 MB size cap in `bwa parse`. APM, EAPM, redundancy, per-minute curves, de-noised build orders with per-race allowlists, worker estimate, matchup, and `Analyze` for one replay. `bwa parse` prints APM, EAPM, redundancy, and build orders (`--minutes`, default 5). Tests cover the section 12 edge cases; computed APM, EAPM, and redundancy agree with screp on all 11 samples. |
 | M3 Store and ingest | not started | |
 | M4 Benchmarks | not started | |
 | M5 Classifier | not started | |
@@ -56,6 +56,16 @@ Anything unexpected found in real replays. These feed `docs/architecture.md` and
 - M2: research is spammed far more than structures. 127 effective repeats of the same research within 10 s, such as Psionic Storm clicked 0.2 s apart.
 - M2: counting worker orders badly overcounts Terran and Protoss workers. Players queue workers, and orders they cannot afford are still recorded. The tracked sample's Terran has 17 effective SCV orders by 0:39 (850 minerals' worth, from a 50-mineral start). Modeling the town hall as a one-at-a-time queue gives the standard opening counts (8 Pylon, 9 Depot, 10 Gate, 11 Rax) for every sample player.
 - M1: screp only fills `Computed` (winner, teams, observers, ineffective flags) after an explicit `Compute()` call.
+
+## Notes for M3
+
+From the M2 review. Items marked done in M2 are not repeated here.
+
+- The pipeline reads files with the same `replay.MaxFileSize` cap and returns `replay.ErrTooLarge` as a `failed` reason.
+- `analyze.Analyze` returns a bare `ErrNot1v1`; the skip reason for the `replays` row comes from `Replay.SkipReason()`. Consider wrapping the reason into the error.
+- Wrap the whole parse, analyze, persist step per replay in a `recover()`; only the parser has one today.
+- The parser keeps its screp config and silenced logger in package-level variables, which CLAUDE.md's "no package-level mutable state" rule forbids as written. They are never written after init; move them into `Parse` when touching the parser next.
+- M2 has not run through CI or the race detector yet (no push, no C compiler on this machine). The owner is installing `make` and `gh`.
 
 ## Questions for the owner
 

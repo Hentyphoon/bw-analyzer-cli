@@ -5,7 +5,8 @@ Go CLI (`bwa`) and HTTP service that ingests StarCraft: Brood War replays into P
 ## Start here
 
 - `PLAN.md` is the spec. Read section 14 (milestones) and the sections the current milestone touches. Don't load the whole file every session.
-- `docs/progress.md` records the current milestone, what is done, and any deviations from the plan. Read it first each session and update it whenever a step finishes. Create it in M0.
+- `docs/progress.md` records the current milestone, what is done, and any deviations from the plan. Read it first each session and update it whenever a step finishes. It also holds the owner's prerequisite checklist.
+- `docs/benchmarks.md` is a template with empty cells. Fill it in place from real runs and keep its sections.
 - `docs/goals.md` says why the project exists and which claims it has to back with evidence. Read it once at the start, and again before benchmark, evaluation, or documentation work.
 - `docs/decisions.md` records why the plan is the way it is. Read it before changing an approach, and append to it when you make a new decision.
 - If this file and `PLAN.md` disagree, follow `PLAN.md` and tell the owner.
@@ -15,6 +16,7 @@ Go CLI (`bwa`) and HTTP service that ingests StarCraft: Brood War replays into P
 - Work on one milestone at a time. When its "Done when" checks pass, summarize what was built and what deviated, update `docs/progress.md`, and stop for review. Don't start the next milestone unprompted.
 - Run `make test lint` before calling any step done.
 - Commit after each coherent step with the milestone in the message, for example `M2: add EAPM per-minute buckets`. Don't push.
+- Keep every `.md` file current as you go, not only at milestone end: `README.md`, `docs/*.md`, `testdata/replays/README.md`, and this file when a convention changes. `PLAN.md` is the spec; don't edit it, record deviations in `docs/progress.md` instead.
 - Stop and ask when `testdata/replays/` is empty, when a new dependency seems necessary, or when real replay data contradicts the plan.
 
 ## Commands
@@ -22,13 +24,13 @@ Go CLI (`bwa`) and HTTP service that ingests StarCraft: Brood War replays into P
 The Makefile is created in M0. Keep this list in sync with it.
 
 - `make build`: build the `bwa` binary
-- `make test`: `go test -race ./...` (`make test RACE=` on machines without cgo)
+- `make test`: `go test -race ./...`
 - `make lint`: `go vet` and `golangci-lint run`
 - `make db-up`: start Postgres with docker compose
 - `make migrate`: apply migrations
 - `make bench CORPUS=<dir>`: run the ingest benchmark matrix
 - Single test: `go test -race -run TestName ./internal/analyze/`
-- Golden files: `go test ./cmd/bwa -run TestParseGolden -update`, only when an output change is intended. Review the diff before committing.
+- Golden files: `go test ./internal/parser/ -update`, only when an output change is intended. Review the diff before committing.
 
 Integration tests skip silently unless `TEST_DATABASE_URL` is set. Run `make db-up` and set it before claiming store, pipeline, or API work is tested.
 
@@ -56,5 +58,5 @@ Integration tests skip silently unless `TEST_DATABASE_URL` is set. Run `make db-
 - The winner can be unknown. Win rates exclude unknown results and report both total games and games with a known result.
 - A build order is a list of commands the player issued, not of things that finished. Name and document it that way.
 - A player's identity is their name, compared case-insensitively. Replays carry no account ID.
-- Replays are untrusted input. Enforce the size cap and return errors for malformed files; never let one panic a worker.
-- Never commit replay files. The owner's samples in `testdata/replays/`, their golden files in `testdata/golden/`, and the benchmark corpus are git-ignored and stay local. The only exception is screp's public sample, `screp_shieldbattery_zvt.rep`, and its golden file, which are already tracked so CI has a real replay.
+- Assume replays are valid Brood War replay files (owner decision, M2). Enforce the 8 MB size cap (`replay.MaxFileSize`) and pass on the errors the library returns, but don't add defensive code for corrupt or adversarial data, such as implausible header values. Keep the parser's existing `recover()` and M3's per-replay failure isolation, which the plan requires.
+- Commit only the small samples in `testdata/replays/`. The benchmark corpus stays out of git.
