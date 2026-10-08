@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/icza/screp/rep/repcmd"
+	"github.com/icza/screp/rep/repcore"
 	"github.com/icza/screp/repparser"
 
 	"github.com/Hentyphoon/bw-analyzer-cli/internal/replay"
@@ -173,5 +175,57 @@ func TestParseSample(t *testing.T) {
 		if !kinds[k] {
 			t.Errorf("no production command of kind %q", k)
 		}
+	}
+}
+
+func TestRaceFromBuilds(t *testing.T) {
+	build := func(pid byte, unitID uint16) repcmd.Cmd {
+		return &repcmd.BuildCmd{Base: &repcmd.Base{PlayerID: pid, Type: repcmd.TypeBuild}, Unit: repcmd.UnitByID(unitID)}
+	}
+	train := func(pid byte, unitID uint16) repcmd.Cmd {
+		return &repcmd.TrainCmd{Base: &repcmd.Base{PlayerID: pid, Type: repcmd.TypeTrain}, Unit: repcmd.UnitByID(unitID)}
+	}
+	const marine = 0x00 // a unit, which RaceOfUnitID does not know
+	tests := []struct {
+		name string
+		cmds []repcmd.Cmd
+		want replay.Race
+	}{
+		{"no commands", nil, replay.RaceUnknown},
+		{"first structure decides", []repcmd.Cmd{build(0, repcmd.UnitIDSupplyDepot), build(0, repcmd.UnitIDPylon)}, replay.Terran},
+		{"zerg", []repcmd.Cmd{build(0, repcmd.UnitIDSpawningPool)}, replay.Zerg},
+		{"protoss", []repcmd.Cmd{build(0, repcmd.UnitIDPylon)}, replay.Protoss},
+		{"other player's structures ignored", []repcmd.Cmd{build(1, repcmd.UnitIDHatchery), build(0, repcmd.UnitIDPylon)}, replay.Protoss},
+		{"units are skipped", []repcmd.Cmd{train(0, marine), build(0, repcmd.UnitIDHatchery)}, replay.Zerg},
+		{"only units", []repcmd.Cmd{train(0, marine)}, replay.RaceUnknown},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := raceFromBuilds(tt.cmds, 0); got != tt.want {
+				t.Errorf("raceFromBuilds = %q, want %q", got, tt.want)
+			}
+		})
+	}
+}
+
+// TestRandomRaceRecordedAsPlayed rewrites the screp sample's Terran to
+// header race 6 (Random) and checks the adapter still reports Terran.
+func TestRandomRaceRecordedAsPlayed(t *testing.T) {
+	sr, err := repparser.ParseConfig(readSample(t), screpConfig())
+	if err != nil {
+		t.Fatal(err)
+	}
+	sr.Compute()
+	const terranID = 1
+	sr.Header.PIDPlayers[terranID].Race = repcore.RaceByID(6)
+
+	r := convert(sr)
+	for _, p := range r.Players {
+		if p.ID == terranID && p.Race != replay.Terran {
+			t.Errorf("player with Random header race = %q, want %q", p.Race, replay.Terran)
+		}
+	}
+	if reason := r.SkipReason(); reason != "" {
+		t.Errorf("SkipReason = %q, want the game kept", reason)
 	}
 }

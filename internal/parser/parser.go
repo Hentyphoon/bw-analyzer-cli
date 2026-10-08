@@ -98,6 +98,9 @@ func convert(sr *rep.Replay) *replay.Replay {
 			Observer: p.Observer,
 			Result:   result(sr.Computed.WinnerTeam, p),
 		}
+		if rp.Race == replay.RaceUnknown && sr.Commands != nil {
+			rp.Race = raceFromBuilds(sr.Commands.Cmds, p.ID)
+		}
 		if pd := sr.Computed.PlayerDescs[i]; pd.StartLocation != nil {
 			rp.Start = &replay.Point{X: int(pd.StartLocation.X), Y: int(pd.StartLocation.Y)}
 		}
@@ -188,6 +191,26 @@ func race(r *repcore.Race) replay.Race {
 		return replay.Protoss
 	case 'Z':
 		return replay.Zerg
+	}
+	return replay.RaceUnknown
+}
+
+// raceFromBuilds returns the race of the first structure a player ordered,
+// or RaceUnknown if they ordered none. It is the fallback for a header race
+// that is not Terran, Protoss, or Zerg, such as a Random pick (race ID 6) if
+// the header ever records the pick instead of the race that was played. A
+// player can only build their own race's structures, so the first one
+// decides. screp's RaceOfUnitID only knows structures, which is all this
+// needs: every player orders one in the opening.
+func raceFromBuilds(cmds []repcmd.Cmd, playerID byte) replay.Race {
+	for _, cmd := range cmds {
+		b, ok := cmd.(*repcmd.BuildCmd)
+		if !ok || b.PlayerID != playerID || b.Unit == nil {
+			continue
+		}
+		if r := race(repcmd.RaceOfUnitID(b.Unit.ID)); r != replay.RaceUnknown {
+			return r
+		}
 	}
 	return replay.RaceUnknown
 }
