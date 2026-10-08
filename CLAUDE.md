@@ -57,4 +57,4 @@ Integration tests skip silently unless `TEST_DATABASE_URL` is set. Run `make db-
 - A build order is a list of commands the player issued, not of things that finished. Name and document it that way.
 - A player's identity is their name, compared case-insensitively. Replays carry no account ID.
 - Replays are untrusted input. Enforce the size cap and return errors for malformed files; never let one panic a worker.
-- Commit only the small samples in `testdata/replays/`. The benchmark corpus stays out of git.
+- Never commit replay files. The owner's samples in `testdata/replays/`, their golden files in `testdata/golden/`, and the benchmark corpus are git-ignored and stay local. The only exception is screp's public sample, `screp_shieldbattery_zvt.rep`, and its golden file, which are already tracked so CI has a real replay.
