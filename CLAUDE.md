@@ -59,5 +59,6 @@ Integration tests skip silently unless `TEST_DATABASE_URL` is set. Run `make db-
 - The winner can be unknown. Win rates exclude unknown results and report both total games and games with a known result.
 - A build order is a list of commands the player issued, not of things that finished. Name and document it that way.
 - A player's identity is their name, compared case-insensitively. Replays carry no account ID.
+- Assume replays are 1v1 games (owner decision, M2). Don't add handling for observers that screp misses in `One on One` or `Top vs Bottom` games. A player who picked Random is recorded under the race they played.
 - Assume replays are valid Brood War replay files (owner decision, M2). Enforce the 8 MB size cap (`replay.MaxFileSize`) and pass on the errors the library returns, but don't add defensive code for corrupt or adversarial data, such as implausible header values. Keep the parser's existing `recover()` and M3's per-replay failure isolation, which the plan requires.
 - Never commit anything under `testdata/` (owner decision, M2). Sample replays, golden files, and the benchmark corpus are git-ignored and stay local, including screp's public sample. Tests that need a replay skip when it is absent, so CI runs without real replays. How to set up the samples locally is in `README.md`.

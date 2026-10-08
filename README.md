@@ -38,7 +38,7 @@ Build order: [z]home (Z), first 5 minutes
 ```
 
 Only 1v1 games between two humans lasting at least two minutes are
-analyzed. Anything else is reported with the reason it was skipped. Files
+analyzed. A player who picked Random is listed under the race they played. Anything else is reported with the reason it was skipped. Files
 over 8 MB are refused; real replays are a few hundred kilobytes.
 
 ## Metrics
