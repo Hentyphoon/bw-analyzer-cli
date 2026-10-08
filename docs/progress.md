@@ -25,7 +25,7 @@ Status is one of: not started, in progress, awaiting review, done.
 |---|---|---|
 | M0 Scaffold | done | `4191db8`. Module layout, flag-based subcommand dispatch with stubs, Makefile, Postgres 16 compose, GitHub Actions CI (build, vet, golangci-lint, `go test -race`). Module renamed in `5df7203`. |
 | M1 Parse | done | `16a4a04`, `345eb0c`. Domain types, frame helpers, content hash, 1v1 filter, screp adapter, `bwa parse <file> [--json]`, golden test. Findings for all nine unconfirmed library items are in `docs/architecture.md`. Two remain open with safe fallbacks (Random race, and observers in non-melee games). |
-| M2 Analyze | awaiting review | `271d27a`, `4caa697`, `485eb7b`, plus docs, the worker queue model, and the 8 MB size cap in `bwa parse`. APM, EAPM, redundancy, per-minute curves, de-noised build orders with per-race allowlists, worker estimate, matchup, and `Analyze` for one replay. `bwa parse` prints APM, EAPM, redundancy, and build orders (`--minutes`, default 5). Tests cover the section 12 edge cases; computed APM, EAPM, and redundancy agree with screp on all 11 samples. |
+| M2 Analyze | awaiting review | `271d27a`, `4caa697`, `485eb7b`, plus docs, the worker queue model, the 8 MB size cap in `bwa parse`, and review fixes. CI passed on `8ecf9a2` (build, vet, golangci-lint, `go test -race`), with the replay-dependent tests skipped there because `testdata/` is not committed. APM, EAPM, redundancy, per-minute curves, de-noised build orders with per-race allowlists, worker estimate, matchup, and `Analyze` for one replay. `bwa parse` prints APM, EAPM, redundancy, and build orders (`--minutes`, default 5). Tests cover the section 12 edge cases; computed APM, EAPM, and redundancy agree with screp on all 11 samples. |
 | M3 Store and ingest | not started | |
 | M4 Benchmarks | not started | |
 | M5 Classifier | not started | |
@@ -64,7 +64,6 @@ From the M2 review. Everything else the review found was fixed in M2 or accepted
 - The pipeline reads files with the same `replay.MaxFileSize` cap and returns `replay.ErrTooLarge` as a `failed` reason.
 - `analyze.Analyze` errors wrap `ErrNot1v1` with the filter's reason, but store the reason itself from `Replay.SkipReason()` rather than parsing the error text.
 - Wrap the whole parse, analyze, persist step per replay in a `recover()`; only the parser has one today.
-- M2 has not run through CI or the race detector yet (no push, no C compiler on this machine). The owner is installing `make` and `gh`.
 
 ## Questions for the owner
 
