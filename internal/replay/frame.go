@@ -30,6 +30,16 @@ func (f Frame) Seconds() float64 {
 	return f.Duration().Seconds()
 }
 
+// Minute returns the zero-based whole game minute that frame f falls in.
+func (f Frame) Minute() int {
+	return int(f.Duration() / time.Minute)
+}
+
+// Minutes returns the game time at frame f in fractional minutes.
+func (f Frame) Minutes() float64 {
+	return f.Duration().Minutes()
+}
+
 // String formats f as m:ss, or h:mm:ss past an hour.
 func (f Frame) String() string {
 	total := int64(f.Duration() / time.Second)

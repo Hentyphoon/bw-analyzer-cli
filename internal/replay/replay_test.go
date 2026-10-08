@@ -31,6 +31,27 @@ func TestFrameConversions(t *testing.T) {
 	}
 }
 
+func TestFrameMinute(t *testing.T) {
+	tests := []struct {
+		frame Frame
+		want  int
+	}{
+		{0, 0},
+		{1428, 0}, // 59.976 s
+		{1429, 1}, // 60.018 s
+		{2857, 1}, // 119.994 s
+		{2858, 2}, // 120.036 s
+	}
+	for _, tt := range tests {
+		if got := tt.frame.Minute(); got != tt.want {
+			t.Errorf("Frame(%d).Minute() = %d, want %d", tt.frame, got, tt.want)
+		}
+	}
+	if got := Frame(2858).Minutes(); math.Abs(got-2.0006) > 1e-9 {
+		t.Errorf("Frame(2858).Minutes() = %v", got)
+	}
+}
+
 func TestFrameAt(t *testing.T) {
 	tests := []struct {
 		d    time.Duration
