@@ -107,6 +107,21 @@ Command Center first, so only two Barracks openings appear:
 A test in `internal/parser` pins the screp sample's Terran at 9 workers
 for the first Supply Depot and 11 for the first Barracks.
 
+Zerg, checked the same way on the 10 Zerg players in the samples: the first
+Overlord comes at 9 workers for 9 of them ("9 Overlord"), and a Spawning
+Pool ordered after it at 9 for all four who did that ("Overpool"). A
+Hatchery ordered before the Pool comes at 11 for all five who did that,
+where players call the opening "12 Hatch". No drone is lost: in the two of
+those games with no ineffective drone orders the count is still 11, and the
+12th drone is ordered right after the Hatchery. The difference is timing.
+A build command is recorded when the drone is sent, and the walk to the
+natural expansion takes several seconds, while players count at placement.
+A Pool in the main has a short walk, so its count matches. The drone orders
+screp marks ineffective are same-second double taps that an early economy
+cannot pay for. This does not affect the classifier: "12 Hatch" in
+`PLAN.md` section 8 is defined by order (Hatchery before Pool), not by a
+count.
+
 Limits. The 300-frame build time comes from Brood War's unit data, not from
 screp, which carries no build times. The model assumes a single town hall:
 once an expansion finishes, two queues run in parallel and the estimate runs

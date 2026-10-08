@@ -55,6 +55,7 @@ Anything unexpected found in real replays. These feed `docs/architecture.md` and
 - M1: the map name in the header is truncated to 26 bytes. `MapData.Name` has the full name, with color control characters that have to be stripped.
 - M2: research is spammed far more than structures. 127 effective repeats of the same research within 10 s, such as Psionic Storm clicked 0.2 s apart.
 - M2: counting worker orders badly overcounts Terran and Protoss workers. Players queue workers, and orders they cannot afford are still recorded. The screp sample's Terran has 17 effective SCV orders by 0:39 (850 minerals' worth, from a 50-mineral start). Modeling the town hall as a one-at-a-time queue gives the standard opening counts (8 Pylon, 9 Depot, 10 Gate, 11 Rax) for every sample player.
+- M2: worker counts are taken when a build command is issued, not when the structure is placed. For an expansion the drone or probe walks for several seconds first, so a "12 Hatch" shows as 11 workers in all five samples. Main-base structures match their names exactly (9 Overlord, Overpool at 9). The classifier's "12 Hatch" rule is order-based, so this does not misclassify.
 - M1: screp only fills `Computed` (winner, teams, observers, ineffective flags) after an explicit `Compute()` call.
 
 ## Notes for M3
