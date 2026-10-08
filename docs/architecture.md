@@ -75,18 +75,44 @@ commands of the 20 players reduce to 8,309 steps (85.7% kept).
 
 ### Worker estimate
 
-`WorkersBefore` is the four starting workers plus every worker in the build
-order before a frame. It ignores workers that died and Zerg drones that
-became structures, which matches how players name openings ("9 Pool" is a
-Spawning Pool ordered at 9 workers).
+`WorkersBefore` estimates a player's worker count just before a frame: the
+four starting workers plus every worker whose production started before
+that frame. It ignores workers that died and Zerg drones that became
+structures, which matches how players name openings ("9 Pool" is a Spawning
+Pool ordered at 9 workers).
 
-It is only trustworthy for Zerg. Each drone uses a larva, so drone orders
-come at a realistic pace. Terran and Protoss players queue workers, and an
-order the player cannot afford is still recorded: in the tracked sample the
-Terran has 17 effective SCV orders by 0:39. That is 850 minerals of
-workers for a player who starts with 50, so most of those orders cannot
-have been produced, yet the estimate would count 21 workers. The classifier
-rules in `PLAN.md` section 8 use worker counts only for Zerg.
+When production starts depends on the race:
+
+- **Zerg.** A Drone starts when it is ordered. Each one uses up a larva, so
+  drone orders already come at the pace they can be made.
+- **Terran and Protoss.** A Command Center or Nexus builds one worker at a
+  time, and an SCV or Probe takes 300 frames (about 12.6 s at Fastest).
+  Players queue several at once, and orders they cannot afford are still
+  recorded, so counting orders overcounts badly. Instead each order starts
+  when it arrives or when the previous worker finishes, whichever is later.
+
+The plan's original rule (four plus every worker ordered) was tried first.
+Results for the 10 Terran and Protoss players (7 Protoss, 3 Terran) in the
+10 1v1 samples, at each player's first structures. The third Terran opened
+Command Center first, so only two Barracks openings appear:
+
+| First structure | Count of orders | Queue model | Name players use |
+|---|---|---|---|
+| Pylon (7 players) | 11 to 25 | 8 | 8 Pylon |
+| Supply Depot (3 players) | 16 to 21 | 8 or 9 | 9 Depot |
+| Gateway (2 players) | 15 to 27 | 10 | 10 Gate |
+| Barracks (2 players) | 25 to 30 | 11 | 11 Rax |
+| Forge (4 players) | 19 to 33 | 11 or 12 | 11/12 Forge |
+
+A test in `internal/parser` pins the tracked sample's Terran at 9 workers
+for the first Supply Depot and 11 for the first Barracks.
+
+Limits. The 300-frame build time comes from Brood War's unit data, not from
+screp, which carries no build times. The model assumes a single town hall:
+once an expansion finishes, two queues run in parallel and the estimate runs
+low. Openings are decided before that. An order the player could not afford
+still enters the modeled queue; the exact opening counts above suggest this
+rarely matters early on.
 
 ## Replay data findings
 

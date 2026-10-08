@@ -59,6 +59,47 @@ func TestActivityMatchesLibrary(t *testing.T) {
 	}
 }
 
+// TestWorkerEstimateOnSample checks the worker estimate against the tracked
+// sample's Terran, who opens with the standard 9 Depot and 11 Barracks. The
+// plain count of SCV orders would put the Depot at 21 workers.
+func TestWorkerEstimateOnSample(t *testing.T) {
+	data, err := os.ReadFile(sampleFile)
+	if err != nil {
+		t.Fatal(err)
+	}
+	r, err := Screp{}.Parse(data)
+	if err != nil {
+		t.Fatal(err)
+	}
+	rep, err := analyze.Analyze(r)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var terran *analyze.PlayerReport
+	for i := range rep.Players {
+		if rep.Players[i].Player.Race == replay.Terran {
+			terran = &rep.Players[i]
+		}
+	}
+	if terran == nil {
+		t.Fatal("sample has no Terran")
+	}
+	want := map[string]int{"Supply Depot": 9, "Barracks": 11}
+	for _, s := range terran.BuildOrder {
+		w, ok := want[s.Name]
+		if !ok {
+			continue
+		}
+		if got := analyze.WorkersBefore(terran.BuildOrder, s.Frame); got != w {
+			t.Errorf("first %s at %s: %d workers, want %d", s.Name, s.Frame, got, w)
+		}
+		delete(want, s.Name) // only the first of each
+	}
+	if len(want) > 0 {
+		t.Errorf("structures not found in the build order: %v", want)
+	}
+}
+
 // TestAllowlistNamesExistInLibrary guards against a typo in an allowlist,
 // which would silently drop that unit or research from every build order.
 func TestAllowlistNamesExistInLibrary(t *testing.T) {

@@ -110,15 +110,46 @@ func Until(steps []BuildStep, f replay.Frame) []BuildStep {
 // StartingWorkers is the number of workers every race starts with.
 const StartingWorkers = 4
 
+// WorkerBuildFrames is how long an SCV or Probe takes to build: 300 frames,
+// about 12.6 s at Fastest. It comes from Brood War's unit data, not from
+// screp, which carries no build times.
+const WorkerBuildFrames replay.Frame = 300
+
 // WorkersBefore estimates a player's worker count just before frame f: the
-// starting workers plus every worker ordered in the build order before f.
-// It is an estimate, not game state: it ignores workers that died, were
-// still in production, or (for Zerg) became structures, and it matches how
-// players name openings ("9 Pool" is a Spawning Pool at 9 workers).
+// starting workers plus the workers whose production started before f. It
+// is an estimate, not game state: it ignores workers that died and Zerg
+// drones that became structures, which matches how players name openings
+// ("9 Pool" is a Spawning Pool ordered at 9 workers).
+//
+// How production starts differs by race:
+//
+//   - A Drone starts when it is ordered: each one uses up a larva, so drone
+//     orders already arrive at the pace they can be made.
+//   - SCVs and Probes come from one Command Center or Nexus queue, one at a
+//     time. Players queue several at once, and orders they cannot afford
+//     are still recorded, so counting orders overcounts badly. Instead each
+//     order starts when it arrives or when the previous worker finishes,
+//     whichever is later.
+//
+// The queue model assumes a single town hall. Once an expansion finishes,
+// workers are built in parallel and the estimate runs low; openings are
+// decided before that.
 func WorkersBefore(steps []BuildStep, f replay.Frame) int {
 	n := StartingWorkers
-	for _, s := range Until(steps, f) {
-		if s.Kind == Unit && workerNames[s.Name] {
+	var queueFree replay.Frame // when the town hall can start the next worker
+	for _, s := range steps {
+		if s.Frame >= f {
+			break // steps are in order, and nothing starts before it is ordered
+		}
+		if s.Kind != Unit || !workerNames[s.Name] {
+			continue
+		}
+		start := s.Frame
+		if s.Name != "Drone" {
+			start = max(s.Frame, queueFree)
+			queueFree = start + WorkerBuildFrames
+		}
+		if start < f {
 			n++
 		}
 	}

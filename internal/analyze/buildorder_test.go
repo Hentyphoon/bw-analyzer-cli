@@ -249,6 +249,86 @@ func TestWorkersBefore(t *testing.T) {
 	}
 }
 
+// TestWorkersBeforeQueue covers the one-at-a-time production queue used for
+// SCVs and Probes.
+func TestWorkersBeforeQueue(t *testing.T) {
+	const b = WorkerBuildFrames
+	tests := []struct {
+		name  string
+		steps []BuildStep
+		f     replay.Frame
+		want  int
+	}{
+		{
+			name: "five queued at once start one build time apart",
+			steps: []BuildStep{
+				step(10, Unit, "SCV"), step(10, Unit, "SCV"), step(10, Unit, "SCV"),
+				step(10, Unit, "SCV"), step(10, Unit, "SCV"),
+			},
+			// Starts at 10, 10+b, 10+2b, 10+3b, 10+4b.
+			f:    10 + 2*b,
+			want: 4 + 2,
+		},
+		{
+			name: "same queue, one frame later",
+			steps: []BuildStep{
+				step(10, Unit, "SCV"), step(10, Unit, "SCV"), step(10, Unit, "SCV"),
+				step(10, Unit, "SCV"), step(10, Unit, "SCV"),
+			},
+			f:    10 + 2*b + 1,
+			want: 4 + 3,
+		},
+		{
+			name: "orders slower than the build time start when ordered",
+			steps: []BuildStep{
+				step(0, Unit, "Probe"), step(b+50, Unit, "Probe"), step(3*b, Unit, "Probe"),
+			},
+			f:    3*b + 1,
+			want: 4 + 3,
+		},
+		{
+			name: "a gap lets the queue go idle",
+			steps: []BuildStep{
+				step(0, Unit, "Probe"), step(0, Unit, "Probe"), // starts 0, b
+				step(5*b, Unit, "Probe"), // queue idle since 2b: starts at 5b
+			},
+			f:    5*b + 1,
+			want: 4 + 3,
+		},
+		{
+			name: "orders after f are not counted even if queued earlier",
+			steps: []BuildStep{
+				step(0, Unit, "SCV"), step(100, Unit, "SCV"),
+			},
+			f:    100,
+			want: 4 + 1,
+		},
+		{
+			name: "drones are not queued",
+			steps: []BuildStep{
+				step(10, Unit, "Drone"), step(10, Unit, "Drone"), step(10, Unit, "Drone"),
+			},
+			f:    11,
+			want: 4 + 3,
+		},
+		{
+			name: "non-worker units do not occupy the queue",
+			steps: []BuildStep{
+				step(0, Unit, "SCV"), step(1, Unit, "Marine"), step(b, Unit, "SCV"),
+			},
+			f:    b + 1,
+			want: 4 + 2,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := WorkersBefore(tt.steps, tt.f); got != tt.want {
+				t.Errorf("WorkersBefore(%d) = %d, want %d", tt.f, got, tt.want)
+			}
+		})
+	}
+}
+
 func TestUntil(t *testing.T) {
 	steps := []BuildStep{step(10, Unit, "SCV"), step(20, Unit, "SCV"), step(30, Unit, "SCV")}
 	tests := []struct {
