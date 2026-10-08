@@ -3,6 +3,7 @@ package analyze
 import (
 	"errors"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/Hentyphoon/bw-analyzer-cli/internal/replay"
@@ -368,11 +369,12 @@ func TestAnalyze(t *testing.T) {
 		name        string
 		players     []replay.Player
 		wantErr     error
+		wantReason  string // part of the error message
 		wantMatchup string
 	}{
-		{"1v1", []replay.Player{zerg, terran}, nil, "TvZ"},
-		{"1v1 with observer", []replay.Player{zerg, terran, obs}, nil, "TvZ"},
-		{"not 1v1", []replay.Player{zerg}, ErrNot1v1, ""},
+		{"1v1", []replay.Player{zerg, terran}, nil, "", "TvZ"},
+		{"1v1 with observer", []replay.Player{zerg, terran, obs}, nil, "", "TvZ"},
+		{"not 1v1", []replay.Player{zerg}, ErrNot1v1, "1 non-observer players", ""},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -390,6 +392,9 @@ func TestAnalyze(t *testing.T) {
 				t.Fatalf("err = %v, want %v", err, tt.wantErr)
 			}
 			if err != nil {
+				if !strings.Contains(err.Error(), tt.wantReason) {
+					t.Errorf("err = %q, want it to contain the reason %q", err, tt.wantReason)
+				}
 				return
 			}
 			if rep.Matchup != tt.wantMatchup || len(rep.Players) != 2 {

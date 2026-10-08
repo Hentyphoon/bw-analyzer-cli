@@ -59,12 +59,11 @@ Anything unexpected found in real replays. These feed `docs/architecture.md` and
 
 ## Notes for M3
 
-From the M2 review. Items marked done in M2 are not repeated here.
+From the M2 review. Everything else the review found was fixed in M2 or accepted (see `docs/decisions.md`).
 
 - The pipeline reads files with the same `replay.MaxFileSize` cap and returns `replay.ErrTooLarge` as a `failed` reason.
-- `analyze.Analyze` returns a bare `ErrNot1v1`; the skip reason for the `replays` row comes from `Replay.SkipReason()`. Consider wrapping the reason into the error.
+- `analyze.Analyze` errors wrap `ErrNot1v1` with the filter's reason, but store the reason itself from `Replay.SkipReason()` rather than parsing the error text.
 - Wrap the whole parse, analyze, persist step per replay in a `recover()`; only the parser has one today.
-- The parser keeps its screp config and silenced logger in package-level variables, which CLAUDE.md's "no package-level mutable state" rule forbids as written. They are never written after init; move them into `Parse` when touching the parser next.
 - M2 has not run through CI or the race detector yet (no push, no C compiler on this machine). The owner is installing `make` and `gh`.
 
 ## Questions for the owner

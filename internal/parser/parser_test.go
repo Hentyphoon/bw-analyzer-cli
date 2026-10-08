@@ -95,7 +95,7 @@ func TestActionCountsMatchLibrary(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			lib, err := repparser.ParseConfig(data, config)
+			lib, err := repparser.ParseConfig(data, screpConfig())
 			if err != nil {
 				t.Fatal(err)
 			}

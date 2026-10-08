@@ -2,12 +2,14 @@ package analyze
 
 import (
 	"errors"
+	"fmt"
 	"slices"
 
 	"github.com/Hentyphoon/bw-analyzer-cli/internal/replay"
 )
 
 // ErrNot1v1 is returned by Analyze for a replay that fails the 1v1 filter.
+// The returned error wraps it together with the filter's reason.
 var ErrNot1v1 = errors.New("replay is not a 1v1 game")
 
 // Report is the analysis of one 1v1 replay.
@@ -29,7 +31,7 @@ type PlayerReport struct {
 // player ID is only safe once the game is known to be two humans.
 func Analyze(r *replay.Replay) (Report, error) {
 	if reason := r.SkipReason(); reason != "" {
-		return Report{}, ErrNot1v1
+		return Report{}, fmt.Errorf("%w: %s", ErrNot1v1, reason)
 	}
 	ps := r.Competitors()
 	rep := Report{Matchup: Matchup(ps[0].Race, ps[1].Race)}

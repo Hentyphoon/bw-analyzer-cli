@@ -34,18 +34,20 @@ var ErrInvalid = errors.New("invalid replay")
 // holds no state, so one value can be shared by all ingest workers.
 type Screp struct{}
 
-// quietLogger swallows the library's parse warnings, which it would
-// otherwise print through the global log package. Lost commands are still
-// reported through Replay.ParseErrors.
-var quietLogger = log.New(io.Discard, "", 0)
-
-// config parses the minimum the analysis needs: commands for APM, build
+// screpConfig parses the minimum the analysis needs: commands for APM, build
 // orders, teams, and winners; map data for start locations. Map graphics and
 // debug data are never needed.
-var config = repparser.Config{
-	Commands: true,
-	MapData:  true,
-	Logger:   quietLogger,
+//
+// The logger swallows the library's parse warnings, which it would otherwise
+// print through the global log package; lost commands are still reported
+// through Replay.ParseErrors. A fresh config per call keeps the package free
+// of shared mutable state, and costs one small allocation.
+func screpConfig() repparser.Config {
+	return repparser.Config{
+		Commands: true,
+		MapData:  true,
+		Logger:   log.New(io.Discard, "", 0),
+	}
 }
 
 // Parse implements Parser. The library already converts its own panics into
@@ -58,7 +60,7 @@ func (Screp) Parse(data []byte) (r *replay.Replay, err error) {
 		}
 	}()
 
-	sr, err := repparser.ParseConfig(data, config)
+	sr, err := repparser.ParseConfig(data, screpConfig())
 	if err != nil {
 		return nil, fmt.Errorf("%w: %w", ErrInvalid, err)
 	}
