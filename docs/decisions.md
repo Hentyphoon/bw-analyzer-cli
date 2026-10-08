@@ -39,3 +39,8 @@ Append new decisions here: milestone, decision, reason.
 - M1: track screp's public ShieldBattery ZvT sample (Apache-2.0) so CI has a real replay to test against.
 - M1: the golden test runs end to end through `bwa parse --json` in `cmd/bwa`. That covers the adapter and the CLI's JSON output together.
 - M1: when a race ID is unknown, map it to `?` and let the 1v1 filter skip the game. Losing a game is better than storing the wrong race.
+- M2: APM, EAPM, and redundancy use screp's definitions exactly (divide by the player's last command, not the game length), so tests can assert agreement with the library. Redundancy is stored as a 0 to 1 share, not screp's percent.
+- M2: build-order de-noising rules come from the sample data (see `docs/architecture.md`, finding 9). The 10 s repeat window is measured from the previous repeat, so a spam burst collapses fully. A different structure on the same position within 10 s replaces the earlier order. Research repeats within 10 s collapse. Units are never collapsed.
+- M2: allowlists are spelled exactly as screp reports names, and a test in `internal/parser` checks every name against screp's tables. That is the only package allowed to import screp, so the check lives there.
+- M2: `analyze.Analyze` refuses replays that fail the 1v1 filter, so nothing downstream keys by player ID before the filter has run.
+- M2: the worker estimate follows the plan as written and is documented as Zerg-only. Whether to correct it for Terran and Protoss is left to the owner before M5.
