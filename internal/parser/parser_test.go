@@ -11,11 +11,17 @@ import (
 	"github.com/Hentyphoon/bw-analyzer-cli/internal/replay"
 )
 
+// sampleFile is screp's public ShieldBattery ZvT test replay, copied
+// locally. Nothing under testdata/ is committed, so tests that need it skip
+// when it is absent (as in CI).
 const sampleFile = "../../testdata/replays/screp_shieldbattery_zvt.rep"
 
 func readSample(t *testing.T) []byte {
 	t.Helper()
 	data, err := os.ReadFile(sampleFile)
+	if errors.Is(err, os.ErrNotExist) {
+		t.Skipf("%s not present; see README.md for how to add it", sampleFile)
+	}
 	if err != nil {
 		t.Fatalf("read sample: %v", err)
 	}
@@ -23,21 +29,26 @@ func readSample(t *testing.T) []byte {
 }
 
 func TestParseInvalidInput(t *testing.T) {
-	sample := readSample(t)
+	// truncate cuts the sample replay; it skips the case when the sample is
+	// absent, while the other cases still run.
+	truncate := func(t *testing.T, n func(int) int) []byte {
+		sample := readSample(t)
+		return sample[:n(len(sample))]
+	}
 	tests := []struct {
 		name string
-		data []byte
+		data func(t *testing.T) []byte
 	}{
-		{"empty", nil},
-		{"garbage", []byte("this is not a replay file at all, just some text")},
-		{"zeros", make([]byte, 4096)},
-		{"replay id only", sample[:16]},
-		{"truncated header", sample[:300]},
-		{"truncated commands", sample[:len(sample)/3]},
+		{"empty", func(*testing.T) []byte { return nil }},
+		{"garbage", func(*testing.T) []byte { return []byte("this is not a replay file at all, just some text") }},
+		{"zeros", func(*testing.T) []byte { return make([]byte, 4096) }},
+		{"replay id only", func(t *testing.T) []byte { return truncate(t, func(int) int { return 16 }) }},
+		{"truncated header", func(t *testing.T) []byte { return truncate(t, func(int) int { return 300 }) }},
+		{"truncated commands", func(t *testing.T) []byte { return truncate(t, func(n int) int { return n / 3 }) }},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r, err := Screp{}.Parse(tt.data)
+			r, err := Screp{}.Parse(tt.data(t))
 			if err == nil {
 				t.Fatalf("Parse returned no error (players: %d)", len(r.Players))
 			}

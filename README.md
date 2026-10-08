@@ -90,5 +90,20 @@ make db-up        # start Postgres 16 via docker compose
 Configuration: `DATABASE_URL` (defaults to the compose database in the
 Makefile); everything else is a flag.
 
+### Sample replays
+
+Nothing under `testdata/` is committed. Tests that read a replay skip
+without one, so set up the samples locally to run them:
+
+- `testdata/replays/screp_shieldbattery_zvt.rep`: copy
+  `repparser/testdata/shieldbattery_raw_trailing_0x78.rep` from the screp
+  module (`go env GOMODCACHE`, then `github.com/icza/screp@v1.13.4`). It is
+  screp's public test replay (Apache-2.0), a ShieldBattery ZvT.
+- Any other 1v1 replays, for example from the TL.net replay database:
+  <https://tl.net/replay/>.
+
+Then generate golden files with
+`go test ./cmd/bwa -run TestParseGolden -update`.
+
 Design notes and findings about the replay data are in
 [docs/architecture.md](docs/architecture.md).

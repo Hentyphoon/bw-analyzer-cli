@@ -59,15 +59,11 @@ func TestActivityMatchesLibrary(t *testing.T) {
 	}
 }
 
-// TestWorkerEstimateOnSample checks the worker estimate against the tracked
+// TestWorkerEstimateOnSample checks the worker estimate against the screp
 // sample's Terran, who opens with the standard 9 Depot and 11 Barracks. The
 // plain count of SCV orders would put the Depot at 21 workers.
 func TestWorkerEstimateOnSample(t *testing.T) {
-	data, err := os.ReadFile(sampleFile)
-	if err != nil {
-		t.Fatal(err)
-	}
-	r, err := Screp{}.Parse(data)
+	r, err := Screp{}.Parse(readSample(t))
 	if err != nil {
 		t.Fatal(err)
 	}

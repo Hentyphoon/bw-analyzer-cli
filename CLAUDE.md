@@ -17,7 +17,7 @@ Go CLI (`bwa`) and HTTP service that ingests StarCraft: Brood War replays into P
 - Work on one milestone at a time. When its "Done when" checks pass, summarize what was built and what deviated, update `docs/progress.md`, and stop for review. Don't start the next milestone unprompted.
 - Run `make test lint` before calling any step done.
 - Commit after each coherent step with the milestone in the message, for example `M2: add EAPM per-minute buckets`. Don't push.
-- Keep every `.md` file current as you go, not only at milestone end: `README.md`, `docs/*.md`, `testdata/replays/README.md`, and this file when a convention changes. `PLAN.md` is the spec; don't edit it, record deviations in `docs/progress.md` instead.
+- Keep every `.md` file current as you go, not only at milestone end: `README.md`, `docs/*.md`, and this file when a convention changes. `PLAN.md` is the spec; don't edit it, record deviations in `docs/progress.md` instead.
 - Stop and ask when `testdata/replays/` is empty, when a new dependency seems necessary, or when real replay data contradicts the plan.
 
 ## Commands
@@ -60,4 +60,4 @@ Integration tests skip silently unless `TEST_DATABASE_URL` is set. Run `make db-
 - A build order is a list of commands the player issued, not of things that finished. Name and document it that way.
 - A player's identity is their name, compared case-insensitively. Replays carry no account ID.
 - Assume replays are valid Brood War replay files (owner decision, M2). Enforce the 8 MB size cap (`replay.MaxFileSize`) and pass on the errors the library returns, but don't add defensive code for corrupt or adversarial data, such as implausible header values. Keep the parser's existing `recover()` and M3's per-replay failure isolation, which the plan requires.
-- Never commit replay files. The owner's samples in `testdata/replays/`, their golden files in `testdata/golden/`, and the benchmark corpus are git-ignored and stay local. The only exception is screp's public sample, `screp_shieldbattery_zvt.rep`, and its golden file, which are already tracked so CI has a real replay.
+- Never commit anything under `testdata/` (owner decision, M2). Sample replays, golden files, and the benchmark corpus are git-ignored and stay local, including screp's public sample. Tests that need a replay skip when it is absent, so CI runs without real replays. How to set up the samples locally is in `README.md`.

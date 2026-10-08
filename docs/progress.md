@@ -12,7 +12,7 @@ Read this first each session. Update it whenever a step finishes.
 
 The owner ticks these. Stop and ask if one is needed and still unticked.
 
-- [x] 5 to 10 sample 1v1 replays in `testdata/replays/`, all three races, at least one pre-1.18 and one Remastered (needed for M1). 10 owner replays from TL.net (git-ignored) plus the tracked screp sample; see `docs/architecture.md`.
+- [x] 5 to 10 sample 1v1 replays in `testdata/replays/`, all three races, at least one pre-1.18 and one Remastered (needed for M1). 10 owner replays from TL.net plus screp's public sample, all local only; see `docs/architecture.md`.
 - [ ] Large benchmark corpus available locally, target 10,000 replays (needed for M4)
 - [ ] Label set in `PLAN.md` section 8 reviewed (needed for M5)
 - [ ] `labels.csv` with about 100 hand-labeled replays (needed for M5)
@@ -42,7 +42,7 @@ Anything built differently from `PLAN.md`, with the reason. One line each, prefi
 - M2: the worker estimate models SCV and Probe production as a one-at-a-time town hall queue (300 frames per worker) instead of section 7's "four plus worker orders issued", which overcounts Terran and Protoss by 3 to 30. Zerg keeps the plan's rule.
 - M2: `bwa parse` has a `--minutes` flag (not in section 5) that limits the build order, default 5. It keeps the golden files readable.
 - M1: `go.mod` requires Go 1.25 instead of 1.24, because screp v1.13.4 requires it.
-- M1: owner replays and their golden files are git-ignored (size, and the golden files carry player names). Only screp's public ShieldBattery ZvT sample (Apache-2.0) is tracked, so CI tests run on that one file.
+- M2: nothing under `testdata/` is committed, not even screp's public sample (owner decision). Tests that read a replay skip without one, so CI checks the code with hand-built data only: 8 tests skip there, including the golden test, the library-agreement tests, and the `bwa parse` output checks. They run locally.
 - M0: the Makefile has a `RACE ?= -race` override (`make test RACE=`) for machines without cgo and a C compiler, such as this Windows box.
 
 ## Surprises in the replay data
@@ -54,7 +54,7 @@ Anything unexpected found in real replays. These feed `docs/architecture.md` and
 - M1: screp's `ineffective` flag catches only some repeated build commands. 50 same-structure, same-tile repeats within 10 seconds were still marked effective, so M2 needs its own collapse step.
 - M1: the map name in the header is truncated to 26 bytes. `MapData.Name` has the full name, with color control characters that have to be stripped.
 - M2: research is spammed far more than structures. 127 effective repeats of the same research within 10 s, such as Psionic Storm clicked 0.2 s apart.
-- M2: counting worker orders badly overcounts Terran and Protoss workers. Players queue workers, and orders they cannot afford are still recorded. The tracked sample's Terran has 17 effective SCV orders by 0:39 (850 minerals' worth, from a 50-mineral start). Modeling the town hall as a one-at-a-time queue gives the standard opening counts (8 Pylon, 9 Depot, 10 Gate, 11 Rax) for every sample player.
+- M2: counting worker orders badly overcounts Terran and Protoss workers. Players queue workers, and orders they cannot afford are still recorded. The screp sample's Terran has 17 effective SCV orders by 0:39 (850 minerals' worth, from a 50-mineral start). Modeling the town hall as a one-at-a-time queue gives the standard opening counts (8 Pylon, 9 Depot, 10 Gate, 11 Rax) for every sample player.
 - M1: screp only fills `Computed` (winner, teams, observers, ineffective flags) after an explicit `Compute()` call.
 
 ## Notes for M3

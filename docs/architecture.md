@@ -104,7 +104,7 @@ Command Center first, so only two Barracks openings appear:
 | Barracks (2 players) | 25 to 30 | 11 | 11 Rax |
 | Forge (4 players) | 19 to 33 | 11 or 12 | 11/12 Forge |
 
-A test in `internal/parser` pins the tracked sample's Terran at 9 workers
+A test in `internal/parser` pins the screp sample's Terran at 9 workers
 for the first Supply Depot and 11 for the first Barracks.
 
 Limits. The 300-frame build time comes from Brood War's unit data, not from
@@ -120,8 +120,9 @@ Checked against screp v1.13.4. Each finding says where it comes from:
 **source** means read in the library code, and **sample** means observed in a
 replay. Findings marked **open** could not be settled with the samples on hand.
 
-**Sample set (11 replays).** The tracked screp sample plus 10 owner replays,
-which are git-ignored. Versions: 5 pre-1.18 (`-1.16`), 1 from 1.18 to 1.20,
+**Sample set (11 replays).** screp's public ShieldBattery ZvT sample plus
+10 owner replays from TL.net. All are local only; nothing under `testdata/`
+is committed. Versions: 5 pre-1.18 (`-1.16`), 1 from 1.18 to 1.20,
 5 from 1.21 onward. Game types: 5 Use Map Settings, 4 Top vs Bottom
 (ShieldBattery), 2 One on One. All three races appear. 10 are 1v1 games;
 two of those have one observer each. 1 is a 2v2 game, which the filter
