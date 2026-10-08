@@ -40,6 +40,7 @@ Anything built differently from `PLAN.md`, with the reason. One line each, prefi
 - M2: de-noising goes beyond section 7's starting point, based on the samples. The 10 s window is measured from the previous repeat, not the first order. A different structure ordered on the same position within 10 s replaces the earlier one. Research repeated within 10 s collapses too.
 - M2: the result (`win`/`loss`/`unknown`) is computed in the parser adapter, not in `internal/analyze`, because it needs only the library's winner team and each player's team.
 - M2: the worker estimate models SCV and Probe production as a one-at-a-time town hall queue (300 frames per worker) instead of section 7's "four plus worker orders issued", which overcounts Terran and Protoss by 3 to 30. Zerg keeps the plan's rule.
+- M2: a human who never ordered a structure is marked an observer, on top of screp's own detection, so observers in `One on One` and `Top vs Bottom` games no longer turn a 1v1 into a skipped three-player game (owner decision).
 - M2: a header race other than T, P, or Z (such as a Random pick) is replaced by the race of the player's first structure order, instead of being skipped as "unknown race" (owner decision).
 - M2: `bwa parse` has a `--minutes` flag (not in section 5) that limits the build order, default 5. It keeps the golden files readable.
 - M1: `go.mod` requires Go 1.25 instead of 1.24, because screp v1.13.4 requires it.
